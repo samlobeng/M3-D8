@@ -1,0 +1,159 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <!-- Required meta tags -->
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+
+    <!-- Bootstrap CSS -->
+    <link
+      href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.1/dist/css/bootstrap.min.css"
+      rel="stylesheet"
+      integrity="sha384-+0n0xVW2eSR5OomGNYDnhzAbDsOXxcvSN1TPprVMTNDbiYZCxYbOOl7+AMvyTG2x"
+      crossorigin="anonymous"
+    />
+
+    <title>Hello, world!</title>
+  </head>
+  <body>
+    <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
+      <div class="container">
+        <a class="navbar-brand" href="#">Navbar</a>
+        <button
+          class="navbar-toggler"
+          type="button"
+          data-bs-toggle="collapse"
+          data-bs-target="#navbarNav"
+          aria-controls="navbarNav"
+          aria-expanded="false"
+          aria-label="Toggle navigation"
+        >
+          <span class="navbar-toggler-icon"></span>
+        </button>
+        <div
+          class="collapse navbar-collapse justify-content-end"
+          id="navbarNav"
+        >
+          <ul class="navbar-nav">
+            <li class="nav-item">
+              <a class="nav-link active" aria-current="page" href="./">Home</a>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link" href="./backoffice.html">Back Office</a>
+            </li>
+          </ul>
+        </div>
+      </div>
+    </nav>
+<div class="container alert">
+</div>
+    <div class="container">
+      <div class="row justify-content-center">
+        <div class="col-md-6 mt-5">
+          <form onsubmit="handleSubmit(event)">
+            <div class="form-group mb-3">
+              <label for="productName" class="form-label">Product Name</label>
+              <input
+                type="text"
+                class="form-control"
+                id="productName"
+                aria-describedby="productName"
+              />
+            </div>
+
+            <div class="form-group mb-3">
+              <label for="description" class="form-label">Description</label>
+              <textarea
+                type="text"
+                class="form-control"
+                id="description"
+                aria-describedby="name"
+                rows="6"
+              ></textarea>
+            </div>
+
+            <div class="form-group mb-3">
+              <label for="brand" class="form-label">Brand</label>
+              <input
+                type="text"
+                class="form-control"
+                id="brand"
+                aria-describedby="brand"
+              />
+            </div>
+
+            <div class="form-group mb-3">
+                <label for="img" class="form-label">Image URL</label>
+                <input
+                  type="text"
+                  class="form-control"
+                  id="img"
+                  aria-describedby="img"
+                />
+              </div>
+  
+
+            <div class="form-group mb-3">
+              <label for="price" class="form-label">Price</label>
+              <input
+                type="number"
+                class="form-control"
+                id="price"
+                aria-describedby="price"
+              />
+            </div>
+
+            <input type="submit" class="btn btn-primary" value="Submit"></input>
+          </form>
+        </div>
+      </div>
+    </div>
+
+    <script>
+      const handleSubmit = async (event) => {
+        event.preventDefault();
+
+        const products = {
+          name: document.getElementById("productName").value,
+          description: document.getElementById("description").value,
+          brand: document.getElementById("brand").value,
+          imageUrl: document.getElementById("img").value,
+          price: document.getElementById("price").value,
+        };
+
+        console.log(products);
+
+        try {
+          let response = await fetch(
+            "https://striveschool-api.herokuapp.com/api/product/",
+            {
+              headers: {
+                Authorization:
+                  "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJfaWQiOiI2MGFlM2JhOWNlYWY0ODAwMTVjOTE4NjYiLCJpYXQiOjE2MjIwMzEyNzQsImV4cCI6MTYyMzI0MDg3NH0.S8tru82LlWGBCzprB0bf6hPO-VzGsxZZNqq_WFddVgs",
+                "Content-Type" : "application/json"
+              },
+              method: "POST",
+            body: JSON.stringify(products),
+            });
+
+            if(response.ok){
+                const data = await response.json();
+                
+                document.querySelector(".alert").innerHTML =`<div class="alert alert-success" role="alert">
+                    "Appointment Created with id of " + ${data._id})
+                     </div>`
+        
+
+            }
+        } catch (error) {
+
+        };
+    };
+    </script>
+    <script
+      src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.1/dist/js/bootstrap.bundle.min.js"
+      integrity="sha384-gtEjrD/SeCtmISkJkNUaaKMoLD0//ElJ19smozuHV6z3Iehds+3Ulb9Bn9Plx0x4"
+      crossorigin="anonymous"
+    ></script>
+  </body>
+</html>
