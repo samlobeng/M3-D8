@@ -59,7 +59,7 @@
                 <div id="product-details"></div>
               </div>
             </div>
-            <button type="button" class="btn btn-success mt-3">Edit Products</button>
+            <button type="button" class="btn btn-success  mb-5" onclick="handleEdit()">Edit Products</button>
       </div>
 
 
@@ -93,6 +93,10 @@
           } catch (error) {
             
           }
+        }
+
+        const handleEdit = () =>{
+            window.location.assign("./backoffice.html?id=" + productId)
         }
 
       </script>

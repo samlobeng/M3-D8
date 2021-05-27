@@ -50,6 +50,7 @@
     <div class="container">
       <div class="row justify-content-center">
         <div class="col-md-6 mt-5">
+          <h2 class="d-inline-block">Back Office</h2><h5 id="subtitle" class="inline-block text-center text-success"></h5>
           <form onsubmit="handleSubmit(event)">
             <div class="form-group mb-3">
               <label for="productName" class="form-label">Product Name</label>
@@ -110,6 +111,40 @@
     </div>
 
     <script>
+
+        const urlParams = new URLSearchParams(window.location.search);
+        let productId = urlParams.get("id")
+        console.log(productId);
+
+        const endpoint = productId ? "https://striveschool-api.herokuapp.com/api/product/" + productId : "https://striveschool-api.herokuapp.com/api/product/"
+      
+      window.onload = async () => {
+        console.log("Resource ID: ", productId);
+        if(productId){
+          document.getElementById("subtitle").innerText = "Edit Product"
+
+          const response = await fetch(endpoint, {
+                                           headers: {
+                                          "Authorization": "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJfaWQiOiI2MGFlM2JhOWNlYWY0ODAwMTVjOTE4NjYiLCJpYXQiOjE2MjIwMzEyNzQsImV4cCI6MTYyMzI0MDg3NH0.S8tru82LlWGBCzprB0bf6hPO-VzGsxZZNqq_WFddVgs"
+                                          }
+                                         });
+          const productDetails = await response.json()
+
+          populateProducts(productDetails)
+
+        }else{
+          document.getElementById("subtitle").innerText = "Create Product"
+        }
+      };
+
+      const populateProducts = (obj)=>{
+        document.getElementById("productName").value = obj.name;
+           document.getElementById("description").value = obj.description;
+           document.getElementById("brand").value = obj.brand;
+           document.getElementById("img").value = obj.img;
+           document.getElementById("price").value = obj.price;
+      }
+
       const handleSubmit = async (event) => {
         event.preventDefault();
 
@@ -125,14 +160,14 @@
 
         try {
           let response = await fetch(
-            "https://striveschool-api.herokuapp.com/api/product/",
+            endpoint,
             {
               headers: {
                 Authorization:
                   "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJfaWQiOiI2MGFlM2JhOWNlYWY0ODAwMTVjOTE4NjYiLCJpYXQiOjE2MjIwMzEyNzQsImV4cCI6MTYyMzI0MDg3NH0.S8tru82LlWGBCzprB0bf6hPO-VzGsxZZNqq_WFddVgs",
                 "Content-Type" : "application/json"
               },
-              method: "POST",
+              method: productId ? "PUT" : "POST",
             body: JSON.stringify(products),
             });
 
@@ -140,9 +175,9 @@
                 const data = await response.json();
                 
                 document.querySelector(".alert").innerHTML =`<div class="alert alert-success" role="alert">
-                    "Appointment Created with id of " + ${data._id})
+                    Product Successfully Saved with id of  + ${data._id}
                      </div>`
-        
+                     
 
             }
         } catch (error) {
