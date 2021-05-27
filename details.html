@@ -31,7 +31,7 @@
       </nav>
 
       <div id="carouselExampleControls" class="carousel slide" data-bs-ride="carousel">
-        <div class="carousel-inner" style="max-height: 50vh;">
+        <div class="carousel-inner" style="max-height: 45vh;">
           <div class="carousel-item active">
             <img src="img3.jpg" class="d-block w-100 img-fluid" alt="...">
           </div>
@@ -54,55 +54,47 @@
 
       <div class="container">
           <div class="row">
-              <h1><span class="title d-flex justify-content-center">Products</span> </h1>
+              <h4><span class="title d-flex justify-content-center">Product Details</span> </h4>
               <div class="col-md-6 product-cards mt-5 mb-5 d-flex">
-                
+                <div id="product-details"></div>
               </div>
-          </div>
+            </div>
+            <button type="button" class="btn btn-success mt-3">Edit Products</button>
       </div>
 
 
       <script>
-          window.onload = async function (){
-            let products =   await loadProducts();
+          
+        const urlParams = new URLSearchParams(window.location.search);
+        const productId = urlParams.get("id")
+        console.log(productId);
+        
 
-            const productEl = document.querySelector(".product-cards")
+        window.onload = async () =>{
+          const productDetailsEl = document.getElementById("product-details")
+          const url = "https://striveschool-api.herokuapp.com/api/product/"
 
-            products.forEach(element => {
-                productEl.innerHTML += `<div class="card" style="width: 15rem;">
-                    <img src="${element.imageUrl}" class="card-img-top" alt="...">
-                    <div class="card-body">
-                      <h5 class="card-title">${element.name}</h5>
-                      <p class="card-text"><b>Description:</b> ${element.description}</p>
-                    </div>
-                    <ul class="list-group list-group-flush">
-                      <li class="list-group-item"><b>Brand:</b> ${element.brand}</li>
-                      <li class="list-group-item"><b>Price:</b> ${element.price}</li>
-                      <li class="list-group-item"><a href = "./details.html?id=${element._id}" class="btn btn-sm btn-link ">View Details</a></li>
-                    </ul>
-                   
-                  </div>`
+          try {
 
-
-            });
-          }
-
-          async function loadProducts(){
-              try {
-                  
-                 let response =  await fetch("https://striveschool-api.herokuapp.com/api/product/", {
+            const response =  await fetch(url + productId, {
                                            headers: {
                                           "Authorization": "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJfaWQiOiI2MGFlM2JhOWNlYWY0ODAwMTVjOTE4NjYiLCJpYXQiOjE2MjIwMzEyNzQsImV4cCI6MTYyMzI0MDg3NH0.S8tru82LlWGBCzprB0bf6hPO-VzGsxZZNqq_WFddVgs"
                                           }
                                           });
-                  let productResponse = await response.json();
-                  return productResponse;
-              } catch (error) {
-                  
+              if(response.ok){
+                const productData = await response.json()
+                console.log(productData);
+                productDetailsEl.innerHTML = `<h1>${productData.name}</h1>
+                <p>${productData.createdAt.toLocaleString()}</p>
+                <p>Brand: ${productData.brand}</p>
+                <p>Price: ${productData.price}</p>
+                `
               }
+          } catch (error) {
+            
           }
+        }
 
-        
       </script>
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.1/dist/js/bootstrap.bundle.min.js" integrity="sha384-gtEjrD/SeCtmISkJkNUaaKMoLD0//ElJ19smozuHV6z3Iehds+3Ulb9Bn9Plx0x4" crossorigin="anonymous"></script>
   </body>
